@@ -15,7 +15,5 @@ size_t tokenize(char* args[], char *input, size_t buflen);
 bool isvalidascii(const char* inputbuffer, size_t bufferlen);
 int findpipe(const char* inputbuffer, size_t bufferlen);
 bool runinbackground(const char* inputbuffer, size_t bufferlen);
-char** splitter(char* parsedinput);
-int countValues(char** arr);
-void removeFirstAndLast(char* myString);
+char* search_command_in_path(const char* command, const char* path);
 #endif

@@ -1,10 +1,29 @@
 #include "parser.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 //Command to trim whitespace and ASCII control characters from buffer
 //[Input] char* inputbuffer - input string to trim
 //[Input] size_t bufferlen - size of input and output string buffers
 //[Output] char* outputbuffer - output string after trimming 
 //[Return] size_t - size of output string after trimming
+char* search_command_in_path(const char* command, const char* path) {
+    char* token = strtok((char*)path, ":");
+    while (token != NULL) {
+        char full_path[1024];
+        snprintf(full_path, sizeof(full_path), "%s/%s", token, command);
+        if (access(full_path, X_OK) == 0) {
+            return strdup(full_path); // Return a dynamically allocated copy of the full path
+        }
+        token = strtok(NULL, ":");
+    }
+    return NULL; // Command not found in any directory in PATH
+}
+
 size_t trimstring(char* outputbuffer, const char* inputbuffer, size_t bufferlen)
 {   
     memcpy(outputbuffer, inputbuffer, bufferlen*sizeof(char));
@@ -85,5 +104,26 @@ bool runinbackground(const char* inputbuffer, size_t bufferlen){
     return false;
 }
 
+char* searchCommand(char* command, char* path) {
+    const char* delimiter = ":";
+    // Initialize strtok with the string and delimiter
+    char *token = strtok(path, delimiter);
+    // Loop through the tokens
+    while (token != NULL) {
+        // Concatenate a "/" to the end of the token
+        size_t token_len = strlen(token);
+        char* modified_token = (char*)malloc(token_len + 2); // +2 for the "/" and null terminator
+        strcpy(modified_token, token);
+        strcat(modified_token, "/");
+        
+        // Print or use the modified token
+        printf("%s\n", modified_token);
 
+        // Free the dynamically allocated memory
+        free(modified_token);
+
+        // Get the next token
+        token = strtok(NULL, delimiter);
+    }
+}
 
