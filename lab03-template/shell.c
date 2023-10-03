@@ -12,8 +12,9 @@
 int main() {
     char buffer[1024];
     char* parsedinput;
-    char* args[3];
+    char* args[11];
     char newline;
+    char* path = "/usr/bin/";
 
     printf("Welcome to the Group20 shell! Enter commands, enter 'quit' to exit\n");
     do {
@@ -29,8 +30,10 @@ int main() {
         //Clean and parse the input string
         parsedinput = (char*) malloc(BUFLEN * sizeof(char));
         size_t parselength = trimstring(parsedinput, input, BUFLEN);
-
-        //Sample shell logic implementation
+        size_t argCount = tokenize(args, parsedinput, BUFLEN);
+        printf("%lu\n", argCount);
+        args[argCount] = NULL;
+                //Sample shell logic implementation
         if ( strcmp(parsedinput, "quit") == 0 ) {
             printf("Bye!!\n");
             return 0;
@@ -38,18 +41,19 @@ int main() {
         else {
             pid_t forkV = fork();
             if ( forkV == 0 ) {
-                args[0] = parsedinput;
-                args[1] = NULL;
-                args[2] = NULL;
-                // char* argument = strcat(args[0], args[1]);
-                if(execve(parsedinput, args, NULL) == -1)
+
+                char* firstArg = (char*)malloc(strlen(path) + strlen(args[0]) + 1); // New temp variable
+                strcpy(firstArg, path);                                             // 
+                // Concatenate the second string to the result
+                strcat(firstArg, args[0]);
+                args[0] = firstArg;
+
+                if(execve(args[0], args, NULL) == -1)
                 {
                     fprintf(stderr, "Error running command in execve\n");
                     return -100;
                 }
-                else {
-                    execve(parsedinput, args, NULL);
-                }
+
             } 
             else {
                 wait(NULL);

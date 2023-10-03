@@ -21,6 +21,16 @@ size_t trimstring(char* outputbuffer, const char* inputbuffer, size_t bufferlen)
     return strlen(outputbuffer);
 }
 
+size_t tokenize(char* args[], char *input, size_t buflen) {
+    size_t count = 0;
+    char* token = strtok(input, " ");
+    while (token != NULL && count < buflen) {
+        args[count++] = token;
+        token = strtok(NULL, " ");
+    }
+    return count;
+}
+
 //Command to trim the input command to just be the first word
 //[Input] char* inputbuffer - input string to trim
 //[Input] size_t bufferlen - size of input and output string buffers
@@ -75,28 +85,5 @@ bool runinbackground(const char* inputbuffer, size_t bufferlen){
     return false;
 }
 
-/**
-char * splitter(char* parsedinput) {
-    char  input = parsedinput;
-    char *tokens[100]; // Assuming a maximum of 100 tokens
-    int tokenCount = 0;
-
-    // Split the string into tokens based on white spaces
-    char *token = strtok(input, " ");
-    while (token != NULL) {
-        tokens[tokenCount] = token;
-        tokenCount++;
-
-        // Get the next token
-        token = strtok(NULL, " ");
-    }
-
-    // Print the tokens
-    for (int i = 0; i < tokenCount; i++) {
-        printf("Token %d: %s\n", i, tokens[i]);
-    }
-    return tokens;
 
 
-}
-**/
