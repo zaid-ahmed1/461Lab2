@@ -15,27 +15,29 @@ int main() {
 
     printf("Welcome to the Group20 shell! Enter commands, enter 'quit' to exit\n");
 
-    do {
-        // Print the terminal prompt and get input
-        printf("$ ");
-        char *input = fgets(buffer, sizeof(buffer), stdin);
-        if (!input) {
-            fprintf(stderr, "Error reading input\n");
-            return -1;
-        }
+do {
+    // Print the terminal prompt and get input
+    printf("$ ");
+    char *input = fgets(buffer, sizeof(buffer), stdin);
+    if (!input) {
+        fprintf(stderr, "Error reading input\n");
+        return -1;
+    }
 
-        // Clean and parse the input string
-        parsedinput = (char*) malloc(BUFLEN * sizeof(char));
-        size_t parselength = trimstring(parsedinput, input, BUFLEN);
-        size_t argCount = tokenize(args, parsedinput, BUFLEN);
-        args[argCount] = NULL;
+    // Clean and parse the input string
+    parsedinput = (char*) malloc(BUFLEN * sizeof(char));
+    size_t parselength = trimstring(parsedinput, input, BUFLEN);
+    size_t argCount = tokenize(args, parsedinput, BUFLEN);
+    args[argCount] = NULL;
 
-        // Sample shell logic implementation
-        if (strcmp(parsedinput, "quit") == 0) {
-            printf("Bye!!\n");
-            return 0;
-        } else {
-            // Check if the command contains a '/' character
+    // Sample shell logic implementation
+    if (strcmp(parsedinput, "quit") == 0) {
+        printf("Bye!!\n");
+        break;  // Use break to exit the loop
+    } else {
+        pid_t forkV = fork();
+        // Check if the command contains a '/' character
+        if (forkV == 0) {
             if (strchr(args[0], '/') != NULL) {
                 // Execute as an absolute or relative path
                 if (execve(args[0], args, NULL) == -1) {
@@ -63,12 +65,17 @@ int main() {
                 } else {
                     fprintf(stderr, "Command not found: %s\n", args[0]);
                 }
-            }
+        }
+        }
+        else {
+            wait(NULL);
         }
 
-        // Remember to free any memory you allocate!
-        free(parsedinput);
-    } while (1);
+    }
+
+    // Remember to free any memory you allocate!
+    free(parsedinput);
+} while (1);
 
     return 0;
 }
