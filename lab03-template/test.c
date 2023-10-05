@@ -34,7 +34,7 @@ int main() {
     //First test string should pass validation
     assert(isvalidascii(teststring1, BUFLEN) == true);
 
-   // Second test string should fail validation
+   // Second test string should true validation
     assert(isvalidascii(teststring2, BUFLEN) == true);
 
     //Third test string should fail validation

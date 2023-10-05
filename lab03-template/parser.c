@@ -57,8 +57,29 @@ size_t tokenize(char* args[], char *input, size_t buflen) {
 //[Return] size_t - size of output string after trimming
 size_t firstword(char* outputbuffer, const char* inputbuffer, size_t bufferlen)
 {
-    //TO DO: Implement this function
-    return 0;
+    // Check for invalid inputs
+    if (outputbuffer == NULL || inputbuffer == NULL || bufferlen == 0) {
+        return 0;
+    }
+
+    // Initialize variables
+    size_t input_len = strlen(inputbuffer);
+    size_t output_len = 0;
+
+    // Iterate through the input string until a space or null character is found
+    for (size_t i = 0; i < input_len && i < bufferlen - 1; i++) {
+        if (inputbuffer[i] != ' ') {
+            outputbuffer[output_len] = inputbuffer[i];
+            output_len++;
+        } else {
+            break;  // Stop when a space is encountered
+        }
+    }
+
+    // Null-terminate the output string
+    outputbuffer[output_len] = '\0';
+
+    return output_len;
 }
 
 //Command to test that string only contains valid ascii characters (non-control and not extended)
@@ -143,6 +164,14 @@ char* searchCommand(char* command, char* path) {
         // Get the next token
         token = strtok(NULL, delimiter);
     }
+}
+void checkCompletedBackgroundProcesses() {
+  int status;
+  pid_t pid;
+
+  while ((pid = waitpid(-1, & status, WNOHANG)) > 0) {
+    printf("Background command (PID: %d) terminated\n", pid);
+  }
 }
 
 
