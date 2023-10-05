@@ -16,4 +16,5 @@ bool isvalidascii(const char* inputbuffer, size_t bufferlen);
 int findpipe(const char* inputbuffer, size_t bufferlen);
 bool runinbackground(const char* inputbuffer, size_t bufferlen);
 char* search_command_in_path(const char* command, const char* path);
+int check_end(const char * command, int bufferlen);
 #endif

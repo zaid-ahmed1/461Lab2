@@ -65,32 +65,37 @@ size_t firstword(char* outputbuffer, const char* inputbuffer, size_t bufferlen)
 //[Input] char* inputbuffer - input string to test
 //[Input] size_t bufferlen - size of input buffer
 //[Return] bool - true if no invalid ASCII characters present
-bool isvalidascii(const char* inputbuffer, size_t bufferlen)
-{
-    //TO DO: Correct this function so that the second test string fails
-    size_t testlen = bufferlen;
-    size_t stringlength = strlen(inputbuffer);
-    if(strlen(inputbuffer) < bufferlen){
-        testlen = stringlength;
+bool isvalidascii(const char* str,size_t BUFLEN) {
+    while (*str) {
+        if (*str < 0 || *str > 127) {
+            return false; // Found a non-ASCII character
+        }
+        str++;
     }
-
-    bool isValid = true;
-    for(size_t ii = 0; ii < testlen; ii++)
-    {
-        isValid &= ((unsigned char) inputbuffer[ii] <= '~'); //In (lower) ASCII '~' is the last printable character
-    }
-
-    return isValid;
+    return true; // All characters are valid ASCII
 }
 
 //Command to find location of pipe character in input string
-//[Input] char* inputbuffer - input string to test
+//[Input] char* inputbuffåer - input string to test
 //[Input] size_t bufferlen - size of input buffer
 //[Return] int - location in the string of the pipe character, or -1 pipe character not found
-int findpipe(const char* inputbuffer, size_t bufferlen){
-    //TO DO: Implement this function
 
-    return -1;
+// int findpipe(const char* inputbuffer, size_t bufferlen) {
+ 
+//     return -1; // Pipe character not found
+// }
+
+  
+
+
+
+int findpipe(const char* inputbuffer, size_t bufferlen) {
+    for (size_t i = 0; i < bufferlen; i++) {
+        if (inputbuffer[i] == '|') {
+            return i; // Return the position of the pipe character
+        }
+    }
+    return -1; // Pipe character not found
 }
 
 //Command to test whether the input string ends with "&" and
@@ -98,12 +103,25 @@ int findpipe(const char* inputbuffer, size_t bufferlen){
 //[Input] char* inputbuffer - input string to test
 //[Input] size_t bufferlen - size of input buffer
 //[Return] bool - true if string ends with "&"
-bool runinbackground(const char* inputbuffer, size_t bufferlen){
-    //TO DO: Implement this function
 
-    return false;
+bool runinbackground(const char* inputbuffer, size_t bufferlen) {
+    // Ensure that bufferlen is not greater than the actual string length
+    int stringlen = strlen(inputbuffer);
+    if (bufferlen > stringlen) {
+        bufferlen = stringlen;
+    }
+
+   
+
+    // Check if the last character of the string is '&'
+
+    if (bufferlen > 0 && inputbuffer[bufferlen - 2] == '&') {
+        
+        return true; // The string ends with '&', indicating a background command
+    }
+
+    return false; // The string does not end with '&'
 }
-
 char* searchCommand(char* command, char* path) {
     const char* delimiter = ":";
     // Initialize strtok with the string and delimiter
@@ -117,7 +135,7 @@ char* searchCommand(char* command, char* path) {
         strcat(modified_token, "/");
         
         // Print or use the modified token
-        printf("%s\n", modified_token);
+       
 
         // Free the dynamically allocated memory
         free(modified_token);
@@ -126,4 +144,5 @@ char* searchCommand(char* command, char* path) {
         token = strtok(NULL, delimiter);
     }
 }
+
 
